@@ -15,8 +15,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next Portfolio",
-  description: "A flexible portfolio with JSON content management and secure admin access.",
+  metadataBase: new URL("https://novan.trustyvisual.my.id"),
+  title: {
+    default: "Novan Rohman — Portfolio",
+    template: "%s | Novan Rohman",
+  },
+  description:
+    "IT Risk & Security at Nusapala Berkah Autonomous, former Full-Stack Developer. Portfolio of web development, security, and risk management work.",
+  keywords: ["Novan Rohman", "Portfolio", "Full-Stack Developer", "Next.js", "IT Security", "Risk Management"],
+  authors: [{ name: "Novan Rohman" }],
+  openGraph: {
+    type: "website",
+    url: "https://novan.trustyvisual.my.id",
+    siteName: "Novan Rohman",
+    title: "Novan Rohman — Portfolio",
+    description:
+      "IT Risk & Security at Nusapala Berkah Autonomous, former Full-Stack Developer. Portfolio of web development, security, and risk management work.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Novan Rohman — Portfolio",
+    description:
+      "IT Risk & Security at Nusapala Berkah Autonomous, former Full-Stack Developer.",
+  },
 };
 
 export default function RootLayout({
