@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 
 type NavItem = { href: string; label: string; icon: ReactNode };
 
+// Contact sits in the middle so it can be the raised, floating action button.
 const navLinks: NavItem[] = [
   {
     href: "/",
@@ -19,6 +20,16 @@ const navLinks: NavItem[] = [
       <>
         <circle cx="12" cy="8" r="4" />
         <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" />
+      </>
+    ),
+  },
+  {
+    href: "/contact",
+    label: "Contact",
+    icon: (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3 7 9 6 9-6" />
       </>
     ),
   },
@@ -37,16 +48,6 @@ const navLinks: NavItem[] = [
       </>
     ),
   },
-  {
-    href: "/contact",
-    label: "Contact",
-    icon: (
-      <>
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="m3 7 9 6 9-6" />
-      </>
-    ),
-  },
 ];
 
 export default function BottomNav() {
@@ -54,11 +55,48 @@ export default function BottomNav() {
 
   return (
     <nav className="md:hidden fixed inset-x-0 bottom-0 z-50 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
-      <div className="bottom-nav-shell rounded-3xl px-2 py-2">
-        <ul className="flex items-stretch">
+      {/* pt-8 leaves room for the floating center button to poke out the top */}
+      <div className="bottom-nav-shell rounded-3xl px-2 pt-2 pb-2">
+        <ul className="flex items-end">
           {navLinks.map((link) => {
             const active =
               link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            const isCenter = link.href === "/contact";
+
+            if (isCenter) {
+              return (
+                <li key={link.href} className="flex-1 min-w-0 flex justify-center">
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    className="relative flex flex-col items-center"
+                  >
+                    <span
+                      className={`absolute -top-9 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-emerald-400 text-white shadow-lg shadow-indigo-500/30 ring-4 ring-[#0d1426] transition-transform ${
+                        active ? "scale-105" : ""
+                      }`}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        {link.icon}
+                      </svg>
+                    </span>
+                    <span className={`mt-8 text-[11px] font-medium ${active ? "text-white" : "text-white/70"}`}>
+                      {link.label}
+                    </span>
+                  </Link>
+                </li>
+              );
+            }
+
             return (
               <li key={link.href} className="flex-1 min-w-0">
                 <Link
