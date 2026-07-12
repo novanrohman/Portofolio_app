@@ -6,7 +6,7 @@ import { contactLinks } from "@/lib/portfolioData";
 
 export default async function Contact() {
   const locale = await getLocale();
-  const contactContent = getContent("contact", locale);
+  const contactContent = await getContent("contact", locale);
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black text-white">
       <NavBar />

@@ -8,8 +8,8 @@ import { getLocale, getUi } from "@/lib/i18n";
 export default async function Home(){
   const locale = await getLocale();
   const t = getUi(locale).home;
-  const homeContent = getContent("home", locale);
-  const projects = getAllProjects(locale);
+  const homeContent = await getContent("home", locale);
+  const projects = await getAllProjects(locale);
   const featured = projects[0];
 
   return (

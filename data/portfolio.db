@@ -2,48 +2,74 @@
   "content": [
     {
       "slug": "home",
-      "title": "Modern portfolio with live content management",
-      "summary": "A responsive Next.js portfolio built with JSON data storage and a secure admin panel.",
-      "body": "Welcome to your searchable, editable portfolio. Use the admin panel to keep your projects, skills, and contact info up to date.",
-      "updatedAt": "2026-06-16T14:44:13.918Z"
+      "title": {
+        "id": "Novan Porto",
+        "en": "Novan Porto"
+      },
+      "summary": {
+        "id": "Manajemen Risiko di Nusapala Berkah Autonomous | Mantan Full-Stack Developer di Omni Hub",
+        "en": "Risk Management at Nusapala Berkah Autonomous | Former Full-Stack Developer at Omni Hub"
+      },
+      "body": {
+        "id": "Saat ini, saya bertanggung jawab dalam mengelola risiko IT dan keamanan sistem di Nusapala Berkah Autonomous. Sebelumnya, sebagai Full-Stack Developer di Omni Hub, saya berpengalaman membangun aplikasi web berbasis Laravel. Kombinasi pengalaman ini memberi saya perspektif unik: saya tidak hanya memahami cara membangun perangkat lunak, tetapi juga tahu persis bagaimana cara mengidentifikasi celah keamanan, menganalisis risiko, dan memastikan sistem berjalan dengan aman serta patuh pada standar industri.",
+        "en": "I currently manage IT risk and system security at Nusapala Berkah Autonomous. Previously, as a Full-Stack Developer at Omni Hub, I built Laravel-based web applications. This combination gives me a unique perspective: I don't just know how to build software, I also know exactly how to identify security gaps, analyze risk, and ensure systems run securely and stay compliant with industry standards."
+      },
+      "updatedAt": "2026-07-12T12:35:22.651Z"
     },
     {
       "slug": "about",
       "title": "About this portfolio",
       "summary": "Use this section to introduce yourself, your mission, and your professional story.",
       "body": "I build fast, maintainable web experiences with modern Next.js architecture. This portfolio stores content in JSON so updates are simple and self-hosted.",
-      "updatedAt": "2026-06-16T14:44:13.918Z"
+      "updatedAt": "2026-06-16T14:41:49.635Z"
     },
     {
       "slug": "skills",
       "title": "Skills and expertise",
       "summary": "List your core technologies and strengths with easy content updates.",
-      "body": "React, Next.js, TypeScript, Tailwind CSS, and content management are the foundation of this portfolio. Keep your skill list current from the secure admin page.",
-      "updatedAt": "2026-06-16T14:44:13.918Z"
+      "body": "React, Next.js, TypeScript, Tailwind CSS, and content management are the foundation of this portfolio.",
+      "updatedAt": "2026-07-12T14:01:50.951Z"
     },
     {
       "slug": "portfolio",
       "title": "Highlighted work",
       "summary": "Showcase your projects, case studies, and featured clients with rich descriptions.",
       "body": "The portfolio section is designed to present your best work with flexible content blocks stored in JSON and editable in the admin area.",
-      "updatedAt": "2026-06-16T14:44:13.918Z"
+      "updatedAt": "2026-07-12T13:40:16.154Z"
     },
     {
       "slug": "contact",
       "title": "Contact and next steps",
       "summary": "Keep your contact details and call-to-action current using the admin editor.",
       "body": "Interested in working together? Update this contact section anytime from the admin dashboard and keep your details accurate.",
-      "updatedAt": "2026-06-16T14:44:13.918Z"
+      "updatedAt": "2026-06-16T14:41:49.635Z"
+    },
+    {
+      "slug": "MyPiras",
+      "title": "MyPiras ERP (Comming Soon)",
+      "summary": "ERP App for B2B and B2C businesses, built with Next.js and Tailwind CSS.",
+      "body": "Proyek ini adalah aplikasi ERP menyeluruh yang dirancang untuk menyederhanakan operasi bisnis B2B maupun B2C. Dibangun dengan Next.js dan Tailwind CSS, aplikasi ini menyediakan antarmuka yang responsif dan mudah digunakan, sehingga bisnis dapat mengelola sumber dayanya secara efisien. Modulnya mencakup manajemen inventori, pemrosesan pesanan, manajemen hubungan pelanggan, dan pelaporan keuangan. Dengan arsitektur yang tangguh dan desain modern, MyPiras ERP membantu bisnis mengoptimalkan alur kerja dan meningkatkan produktivitas.",
+      "updatedAt": "2026-07-12T14:04:08.432Z"
     }
   ],
   "projects": [
     {
-      "slug": "example-project",
-      "title": "Example project",
-      "summary": "A sample project to show your work.",
-      "body": "This project highlights a modern portfolio workflow using Next.js and JSON data storage.",
-      "url": "https://example.com",
-      "updatedAt": "2026-06-16T14:44:13.918Z"
+      "slug": "MyPiras",
+      "title": {
+        "id": "MyPiras ERP (Segera Hadir)",
+        "en": "MyPiras ERP (Coming Soon)"
+      },
+      "image": "/images/mypiras.svg",
+      "summary": {
+        "id": "Aplikasi ERP untuk bisnis B2B dan B2C, dibangun dengan Next.js dan Tailwind CSS.",
+        "en": "ERP App for B2B and B2C businesses, built with Next.js and Tailwind CSS."
+      },
+      "body": {
+        "id": "Proyek ini adalah aplikasi ERP menyeluruh yang dirancang untuk menyederhanakan operasi bisnis B2B maupun B2C. Dibangun dengan Next.js dan Tailwind CSS, aplikasi ini menyediakan antarmuka yang responsif dan mudah digunakan, sehingga bisnis dapat mengelola sumber dayanya secara efisien. Modulnya mencakup manajemen inventori, pemrosesan pesanan, manajemen hubungan pelanggan, dan pelaporan keuangan. Dengan arsitektur yang tangguh dan desain modern, MyPiras ERP membantu bisnis mengoptimalkan alur kerja dan meningkatkan produktivitas.",
+        "en": "This project is a comprehensive ERP application designed to streamline business operations for both B2B and B2C companies. Built with Next.js and Tailwind CSS, it offers a responsive and user-friendly interface, enabling businesses to manage their resources efficiently. The application includes modules for inventory management, order processing, customer relationship management, and financial reporting. With its robust architecture and modern design, MyPiras ERP helps businesses optimize their workflows and improve overall productivity."
+      },
+      "url": "https://mypiras.trustyvisual.com",
+      "updatedAt": "2026-06-16T14:41:49.635Z"
     }
   ]
 }

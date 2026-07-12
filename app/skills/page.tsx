@@ -6,7 +6,7 @@ import { skills } from "@/lib/portfolioData";
 
 export default async function Skills() {
   const locale = await getLocale();
-  const skillsContent = getContent("skills", locale);
+  const skillsContent = await getContent("skills", locale);
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black text-white">
       <NavBar />

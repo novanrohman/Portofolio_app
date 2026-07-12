@@ -5,8 +5,8 @@ import { getLocale } from "@/lib/i18n";
 
 export default async function Portfolio() {
   const locale = await getLocale();
-  const portfolioContent = getContent("portfolio", locale);
-  const portfolioItems = getAllProjects(locale);
+  const portfolioContent = await getContent("portfolio", locale);
+  const portfolioItems = await getAllProjects(locale);
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black text-white">
       <NavBar />
