@@ -10,9 +10,9 @@ export default async function Skills() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black text-white">
       <NavBar />
-      <main className="mx-auto max-w-4xl px-6 py-20">
+      <main className="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-20">
         <Reveal className="glass-soft rounded-2xl p-8">
-          <h1 className="text-3xl font-semibold">{skillsContent?.title ?? "Skills"}</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold">{skillsContent?.title ?? "Skills"}</h1>
           <p className="mt-4 text-white/80">{skillsContent?.body ?? "Keep this section updated from the admin panel."}</p>
           <div className="mt-6 flex flex-wrap gap-3">
             {skills.map((s) => (

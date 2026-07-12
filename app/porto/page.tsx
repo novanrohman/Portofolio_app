@@ -10,9 +10,9 @@ export default async function Portfolio() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black text-white">
       <NavBar />
-      <main className="mx-auto max-w-6xl px-6 py-20">
+      <main className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
         <Reveal className="glass rounded-3xl p-8">
-          <h1 className="text-3xl font-semibold">{portfolioContent?.title ?? "Portfolio"}</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold">{portfolioContent?.title ?? "Portfolio"}</h1>
           <p className="mt-4 text-white/80">{portfolioContent?.body ?? "Showcase your work and manage projects from the admin dashboard."}</p>
           <div className="mt-6 grid gap-6 md:grid-cols-2">
             {portfolioItems.map((p) => (

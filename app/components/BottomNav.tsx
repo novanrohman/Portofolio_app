@@ -55,9 +55,9 @@ export default function BottomNav() {
 
   return (
     <nav className="md:hidden fixed inset-x-0 bottom-0 z-50 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
-      {/* pt-8 leaves room for the floating center button to poke out the top */}
-      <div className="bottom-nav-shell rounded-3xl px-2 pt-2 pb-2">
-        <ul className="flex items-end">
+      <div className="bottom-nav-shell mx-auto max-w-md rounded-3xl px-1.5 py-2">
+        {/* grid-cols-5 = repeat(5, minmax(0,1fr)) — each tab is exactly 1/5, never overflows */}
+        <ul className="grid grid-cols-5 items-end">
           {navLinks.map((link) => {
             const active =
               link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -65,7 +65,7 @@ export default function BottomNav() {
 
             if (isCenter) {
               return (
-                <li key={link.href} className="flex-1 min-w-0 flex justify-center">
+                <li key={link.href} className="min-w-0 flex justify-center">
                   <Link
                     href={link.href}
                     aria-current={active ? "page" : undefined}
@@ -89,7 +89,7 @@ export default function BottomNav() {
                         {link.icon}
                       </svg>
                     </span>
-                    <span className={`mt-8 text-[11px] font-medium ${active ? "text-white" : "text-white/70"}`}>
+                    <span className={`mt-8 text-[10px] font-medium ${active ? "text-white" : "text-white/70"}`}>
                       {link.label}
                     </span>
                   </Link>
@@ -98,11 +98,11 @@ export default function BottomNav() {
             }
 
             return (
-              <li key={link.href} className="flex-1 min-w-0">
+              <li key={link.href} className="min-w-0">
                 <Link
                   href={link.href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex flex-col items-center gap-1 rounded-2xl px-0.5 py-1.5 text-[11px] font-medium transition-colors ${
+                  className={`flex flex-col items-center gap-1 rounded-2xl px-0.5 py-1.5 text-[10px] font-medium transition-colors ${
                     active ? "text-white bg-white/10" : "text-white/60 hover:text-white"
                   }`}
                 >
@@ -115,10 +115,11 @@ export default function BottomNav() {
                     strokeWidth="1.9"
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                    className="shrink-0"
                   >
                     {link.icon}
                   </svg>
-                  <span className="max-w-full truncate">{link.label}</span>
+                  <span className="w-full truncate text-center">{link.label}</span>
                 </Link>
               </li>
             );
