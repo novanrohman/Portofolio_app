@@ -31,6 +31,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Prevent decorative elements (hero blobs, etc.) from causing horizontal
+   scroll on mobile. `clip` (not hidden) avoids creating a scroll container,
+   so the sticky navbar keeps working. */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 /* Glassmorphism utilities */
 :root {
   --glass-bg: rgba(255,255,255,0.12);

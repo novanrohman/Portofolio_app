@@ -15,9 +15,9 @@ export default async function Home(){
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-950 to-black text-white">
       <NavBar />
-      <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 relative">
-        <div className="hero-blob blob-1" style={{ width: 340, height: 240, left: -60, top: -40, background: "radial-gradient(circle, rgba(99,102,241,0.45), rgba(99,102,241,0.12))" }} />
-        <div className="hero-blob blob-2" style={{ width: 420, height: 300, right: -80, bottom: -60, background: "radial-gradient(circle, rgba(16,185,129,0.4), rgba(16,185,129,0.08))" }} />
+      <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 relative overflow-x-clip">
+        <div className="hero-blob blob-1 hidden sm:block" style={{ width: 340, height: 240, left: -60, top: -40, background: "radial-gradient(circle, rgba(99,102,241,0.45), rgba(99,102,241,0.12))" }} />
+        <div className="hero-blob blob-2 hidden sm:block" style={{ width: 420, height: 300, right: -80, bottom: -60, background: "radial-gradient(circle, rgba(16,185,129,0.4), rgba(16,185,129,0.08))" }} />
 
         <Reveal className="glass rounded-3xl p-6 sm:p-10 md:p-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">{homeContent?.title ?? "Your modern portfolio"}</h1>
