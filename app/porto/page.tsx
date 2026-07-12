@@ -20,13 +20,17 @@ export default async function Portfolio() {
                 <div className="flex items-start gap-4">
                   <div className="flex-1">
                     <h3 className="font-semibold text-white">{p.title}</h3>
-                    <div className="text-sm text-white/70">{p.role} — {p.team}</div>
-                    <p className="mt-2 text-white/80">{p.description}</p>
-                    <div className="mt-3 flex flex-wrap gap-2 text-sm text-white/70">
-                      {p.tech?.map((t) => (
-                        <span key={t} className="rounded-full bg-white/6 px-2 py-1 card-anim">{t}</span>
-                      ))}
-                    </div>
+                    <p className="mt-2 text-white/80">{p.summary}</p>
+                    {p.url && (
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 inline-block text-sm text-emerald-300 hover:text-emerald-200"
+                      >
+                        Visit site →
+                      </a>
+                    )}
                   </div>
                   {p.image && (
                     <img src={p.image} alt={p.title} className="w-28 h-20 object-cover rounded" />
