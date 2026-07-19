@@ -11,17 +11,39 @@ type ContentItem = {
   updatedAt: string;
 };
 
+type Locale = "id" | "en";
+type Bilingual = { id: string; en: string };
+type BilingualForm = {
+  slug: string;
+  title: Bilingual;
+  summary: Bilingual;
+  body: Bilingual;
+};
+
+// A field from the API may be a plain string (legacy) or a { id, en } object.
+function toBilingual(value: unknown): Bilingual {
+  if (value && typeof value === "object") {
+    const v = value as Partial<Bilingual>;
+    return { id: v.id ?? "", en: v.en ?? "" };
+  }
+  const s = typeof value === "string" ? value : "";
+  return { id: s, en: s };
+}
+
+const emptyForm: BilingualForm = {
+  slug: "home",
+  title: { id: "", en: "" },
+  summary: { id: "", en: "" },
+  body: { id: "", en: "" },
+};
+
 export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [checked, setChecked] = useState(false);
   const [contents, setContents] = useState<ContentItem[]>([]);
   const [selectedSlug, setSelectedSlug] = useState<string>("home");
-  const [form, setForm] = useState({
-    slug: "home",
-    title: "",
-    summary: "",
-    body: "",
-  });
+  const [form, setForm] = useState<BilingualForm>(emptyForm);
+  const [editLang, setEditLang] = useState<Locale>("id");
   const [status, setStatus] = useState<string>("");
 
   useEffect(() => {
@@ -52,17 +74,20 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!authenticated || !selectedSlug) return;
-    fetch(`/api/content?slug=${selectedSlug}`)
+    fetch(`/api/content?slug=${selectedSlug}&raw=1`)
       .then((res) => res.json())
       .then((data) => {
         setForm({
           slug: data.slug,
-          title: data.title,
-          summary: data.summary,
-          body: data.body,
+          title: toBilingual(data.title),
+          summary: toBilingual(data.summary),
+          body: toBilingual(data.body),
         });
       });
   }, [authenticated, selectedSlug]);
+
+  const setField = (field: "title" | "summary" | "body", value: string) =>
+    setForm((prev) => ({ ...prev, [field]: { ...prev[field], [editLang]: value } }));
 
   const handleSave = async () => {
     setStatus("Saving...");
@@ -74,7 +99,11 @@ export default function AdminPage() {
     const result = await response.json();
     if (response.ok) {
       setStatus("Saved successfully.");
-      setContents((prev) => prev.map((item) => (item.slug === result.slug ? result : item)));
+      // Sidebar shows a plain string title; use the ID language for its label.
+      const label = toBilingual(result.title).id || form.title.id || result.slug;
+      setContents((prev) =>
+        prev.map((item) => (item.slug === result.slug ? { ...item, title: label } : item))
+      );
     } else {
       setStatus(result.error ?? "Save failed.");
     }
@@ -166,25 +195,49 @@ export default function AdminPage() {
                 />
               </div>
 
+              {/* Language toggle: edit ID and EN separately */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Language:</span>
+                <div className="inline-flex rounded-xl border border-zinc-300 p-0.5 dark:border-zinc-700">
+                  {(["id", "en"] as const).map((lang) => (
+                    <button
+                      key={lang}
+                      type="button"
+                      onClick={() => setEditLang(lang)}
+                      className={`rounded-lg px-3 py-1 text-xs font-semibold uppercase transition ${
+                        editLang === lang
+                          ? "bg-blue-600 text-white"
+                          : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                      }`}
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  Editing {editLang === "id" ? "Indonesian" : "English"}
+                </span>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Title
+                  Title ({editLang.toUpperCase()})
                 </label>
                 <input
                   type="text"
-                  value={form.title}
-                  onChange={(event) => setForm({ ...form, title: event.target.value })}
+                  value={form.title[editLang]}
+                  onChange={(event) => setField("title", event.target.value)}
                   className="mt-2 w-full rounded-2xl border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Summary
+                  Summary ({editLang.toUpperCase()})
                 </label>
                 <textarea
-                  value={form.summary}
-                  onChange={(event) => setForm({ ...form, summary: event.target.value })}
+                  value={form.summary[editLang]}
+                  onChange={(event) => setField("summary", event.target.value)}
                   rows={3}
                   className="mt-2 w-full rounded-2xl border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
                 />
@@ -192,11 +245,11 @@ export default function AdminPage() {
 
               <div>
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Body
+                  Body ({editLang.toUpperCase()})
                 </label>
                 <textarea
-                  value={form.body}
-                  onChange={(event) => setForm({ ...form, body: event.target.value })}
+                  value={form.body[editLang]}
+                  onChange={(event) => setField("body", event.target.value)}
                   rows={8}
                   className="mt-2 w-full rounded-2xl border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
                 />
