@@ -145,17 +145,55 @@ body {
   overflow: hidden;
 }
 
-/* Reveal animations */
+/* Reveal animations.
+   Visible by default so content never disappears if JS is slow/disabled.
+   The hide-then-animate behavior only applies once the `js` class is set. */
 .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.js .reveal {
   opacity: 0;
   transform: translateY(14px) scale(0.995);
   transition: opacity 600ms cubic-bezier(.2,.8,.2,1), transform 600ms cubic-bezier(.2,.8,.2,1);
   will-change: transform, opacity;
 }
 
-.reveal.in-view {
+.js .reveal.in-view {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+/* Rich content (WYSIWYG body) rendering */
+.rich-content p { margin: 0.75rem 0; line-height: 1.75; }
+.rich-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.rich-content h2, .rich-content h3 { color: #fff; font-weight: 600; margin: 1.25rem 0 0.5rem; }
+.rich-content h2 { font-size: 1.25rem; }
+.rich-content h3 { font-size: 1.1rem; }
+.rich-content ul, .rich-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.rich-content ul { list-style: disc; }
+.rich-content ol { list-style: decimal; }
+.rich-content a { color: #6ee7b7; text-decoration: underline; }
+.rich-content strong { color: #fff; }
+
+/* Admin WYSIWYG editor content */
+.admin-richtext h2 { font-size: 1.2rem; font-weight: 600; margin: 0.6rem 0 0.3rem; }
+.admin-richtext h3 { font-size: 1.05rem; font-weight: 600; margin: 0.5rem 0 0.3rem; }
+.admin-richtext p { margin: 0.4rem 0; }
+.admin-richtext ul { list-style: disc; padding-left: 1.4rem; margin: 0.4rem 0; }
+.admin-richtext ol { list-style: decimal; padding-left: 1.4rem; margin: 0.4rem 0; }
+.admin-richtext img { max-width: 100%; border-radius: 0.5rem; margin: 0.5rem 0; }
+.admin-richtext a { color: #2563eb; text-decoration: underline; }
+.admin-richtext:empty::before {
+  content: "Tulis deskripsi detail… (sisipkan gambar via toolbar 🖼)";
+  color: #9ca3af;
 }
 
 /* Subtle floating blobs in hero */

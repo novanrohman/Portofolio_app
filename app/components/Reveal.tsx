@@ -10,6 +10,12 @@ export default function Reveal({ children, className = "" }: { children: React.R
     const el = ref.current;
     if (!el) return;
 
+    // Fallback: if IntersectionObserver isn't available, just show the content.
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+
     const obs = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {

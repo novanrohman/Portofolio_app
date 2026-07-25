@@ -28,9 +28,9 @@
       },
       "body": {
         "id": "Portofolio terkait project yang pernah di buat",
-        "en": "I build fast, maintainable web experiences with modern Next.js architecture. This portfolio stores content in JSON so updates are simple and self-hosted."
+        "en": "I build fast, maintainable web experiences with modern Next.js architecture"
       },
-      "updatedAt": "2026-07-25T13:44:59.044Z"
+      "updatedAt": "2026-07-25T14:39:38.804Z"
     },
     {
       "slug": "skills",
@@ -73,6 +73,29 @@
         "Figma"
       ],
       "updatedAt": "2026-07-25T13:41:22.678Z"
+    },
+    {
+      "slug": "_featured",
+      "title": "featured",
+      "summary": "collection",
+      "body": [
+        "MyPiras"
+      ],
+      "updatedAt": "2026-07-25T14:38:29.925Z"
+    },
+    {
+      "slug": "_projectmeta",
+      "title": "projectmeta",
+      "summary": "collection",
+      "body": [
+        {
+          "slug": "MyPiras",
+          "tech": [
+            "Nextjs"
+          ]
+        }
+      ],
+      "updatedAt": "2026-07-25T15:07:18.477Z"
     }
   ],
   "projects": [
@@ -82,17 +105,17 @@
         "id": "MyPiras ERP (Segera Hadir)",
         "en": "MyPiras ERP (Coming Soon)"
       },
-      "image": "/images/mypiras.svg",
       "summary": {
         "id": "Aplikasi ERP untuk bisnis B2B dan B2C, dibangun dengan Next.js dan Tailwind CSS.",
         "en": "ERP App for B2B and B2C businesses, built with Next.js and Tailwind CSS."
       },
       "body": {
-        "id": "Proyek ini adalah aplikasi ERP menyeluruh yang dirancang untuk menyederhanakan operasi bisnis B2B maupun B2C. Dibangun dengan Next.js dan Tailwind CSS, aplikasi ini menyediakan antarmuka yang responsif dan mudah digunakan, sehingga bisnis dapat mengelola sumber dayanya secara efisien. Modulnya mencakup manajemen inventori, pemrosesan pesanan, manajemen hubungan pelanggan, dan pelaporan keuangan. Dengan arsitektur yang tangguh dan desain modern, MyPiras ERP membantu bisnis mengoptimalkan alur kerja dan meningkatkan produktivitas.",
+        "id": "Proyek ini adalah aplikasi ERP menyeluruh yang dirancang untuk menyederhanakan operasi bisnis B2B maupun B2C. Dibangun dengan Next.js dan Tailwind CSS, aplikasi ini menyediakan antarmuka yang responsif dan mudah digunakan, sehingga bisnis dapat mengelola sumber dayanya secara efisien. Modulnya mencakup manajemen inventori, pemrosesan pesanan, manajemen hubungan pelanggan, dan pelaporan keuangan. Dengan arsitektur yang tangguh dan desain modern, MyPiras ERP membantu bisnis mengoptimalkan alur kerja dan meningkatkan produktivitas.<div><img src=\"https://portcities.net/web/image/63175-61ff9f65/ERP%20ecosystem.png\"></div>",
         "en": "This project is a comprehensive ERP application designed to streamline business operations for both B2B and B2C companies. Built with Next.js and Tailwind CSS, it offers a responsive and user-friendly interface, enabling businesses to manage their resources efficiently. The application includes modules for inventory management, order processing, customer relationship management, and financial reporting. With its robust architecture and modern design, MyPiras ERP helps businesses optimize their workflows and improve overall productivity."
       },
+      "image": "/images/mypiras.svg",
       "url": "https://mypiras.trustyvisual.com",
-      "updatedAt": "2026-06-16T14:41:49.635Z"
+      "updatedAt": "2026-07-25T15:07:18.455Z"
     }
   ]
 }

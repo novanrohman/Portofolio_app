@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import RichTextEditor from "@/app/admin/RichTextEditor";
 
 type Locale = "id" | "en";
 type Bilingual = { id: string; en: string };
@@ -12,34 +13,64 @@ type Project = {
   image: string;
   url: string;
 };
+type Meta = { slug: string; role?: string; team?: string; tech?: string[] };
+// role/team/tech held as strings in the form (tech = comma separated).
+type FormProject = Project & { role: string; team: string; tech: string };
 
 const inputCls =
   "mt-2 w-full rounded-2xl border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900";
 const labelCls = "block text-sm font-medium text-zinc-700 dark:text-zinc-300";
 
-const blank = (): Project => ({
+const blank = (): FormProject => ({
   slug: "",
   title: { id: "", en: "" },
   summary: { id: "", en: "" },
   body: { id: "", en: "" },
   image: "",
   url: "",
+  role: "",
+  team: "",
+  tech: "",
 });
 
 export default function ProjectsEditor() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [form, setForm] = useState<Project>(blank());
+  const [form, setForm] = useState<FormProject>(blank());
   const [editLang, setEditLang] = useState<Locale>("id");
   const [status, setStatus] = useState("");
+  const [featured, setFeatured] = useState<string[]>([]);
+  const [metaList, setMetaList] = useState<Meta[]>([]);
 
-  const load = () =>
+  const load = () => {
     fetch("/api/projects?raw=1")
       .then((r) => r.json())
       .then(setProjects);
+    fetch("/api/collections?key=featured")
+      .then((r) => r.json())
+      .then((d) => setFeatured(Array.isArray(d.items) ? d.items : []));
+    fetch("/api/collections?key=projectmeta")
+      .then((r) => r.json())
+      .then((d) => setMetaList(Array.isArray(d.items) ? d.items : []));
+  };
+
+  const openProject = (p: Project) => {
+    const m = metaList.find((x) => x.slug === p.slug);
+    setForm({ ...p, role: m?.role ?? "", team: m?.team ?? "", tech: (m?.tech ?? []).join(", ") });
+  };
 
   useEffect(() => {
     load();
   }, []);
+
+  const togglePin = async (slug: string) => {
+    const next = featured.includes(slug) ? featured.filter((s) => s !== slug) : [...featured, slug];
+    setFeatured(next);
+    await fetch("/api/collections", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "featured", items: next }),
+    });
+  };
 
   const setField = (field: "title" | "summary" | "body", value: string) =>
     setForm((p) => ({ ...p, [field]: { ...p[field], [editLang]: value } }));
@@ -50,11 +81,26 @@ export default function ProjectsEditor() {
       return;
     }
     setStatus("Saving...");
+    const { role, team, tech, ...project } = form;
     const res = await fetch("/api/projects", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify(project),
     });
+
+    // Save extra metadata (role/team/tech) keyed by slug.
+    const techArr = tech.split(",").map((s) => s.trim()).filter(Boolean);
+    const nextMeta: Meta[] = [
+      ...metaList.filter((m) => m.slug !== form.slug),
+      { slug: form.slug, role: role || undefined, team: team || undefined, tech: techArr },
+    ];
+    await fetch("/api/collections", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "projectmeta", items: nextMeta }),
+    });
+    setMetaList(nextMeta);
+
     setStatus(res.ok ? "Saved." : "Save failed.");
     if (res.ok) await load();
   };
@@ -85,7 +131,14 @@ export default function ProjectsEditor() {
                 p.slug === form.slug ? "bg-blue-600 text-white" : "bg-white dark:bg-zinc-950"
               }`}
             >
-              <button onClick={() => setForm(p)} className="min-w-0 flex-1 truncate text-left">
+              <button
+                onClick={() => togglePin(p.slug)}
+                className={`mr-1 text-base leading-none ${featured.includes(p.slug) ? "text-amber-400" : "opacity-40 hover:opacity-80"}`}
+                title={featured.includes(p.slug) ? "Unpin from Highlighted" : "Pin to Highlighted"}
+              >
+                {featured.includes(p.slug) ? "★" : "☆"}
+              </button>
+              <button onClick={() => openProject(p)} className="min-w-0 flex-1 truncate text-left">
                 {p.title.id || p.slug}
               </button>
               <button onClick={() => remove(p.slug)} className="ml-2 text-xs opacity-70 hover:opacity-100" title="Delete">
@@ -129,6 +182,20 @@ export default function ProjectsEditor() {
           <label className={labelCls}>Link URL</label>
           <input value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} className={inputCls} placeholder="https://..." />
         </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className={labelCls}>Role</label>
+            <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className={inputCls} placeholder="Fullstack Developer" />
+          </div>
+          <div>
+            <label className={labelCls}>Team</label>
+            <input value={form.team} onChange={(e) => setForm({ ...form, team: e.target.value })} className={inputCls} placeholder="3 orang" />
+          </div>
+        </div>
+        <div>
+          <label className={labelCls}>Tech stack (comma separated)</label>
+          <input value={form.tech} onChange={(e) => setForm({ ...form, tech: e.target.value })} className={inputCls} placeholder="Laravel, Bootstrap, JS" />
+        </div>
         <div>
           <label className={labelCls}>Title ({editLang.toUpperCase()})</label>
           <input value={form.title[editLang]} onChange={(e) => setField("title", e.target.value)} className={inputCls} />
@@ -138,8 +205,24 @@ export default function ProjectsEditor() {
           <textarea value={form.summary[editLang]} onChange={(e) => setField("summary", e.target.value)} rows={2} className={inputCls} />
         </div>
         <div>
-          <label className={labelCls}>Body ({editLang.toUpperCase()})</label>
-          <textarea value={form.body[editLang]} onChange={(e) => setField("body", e.target.value)} rows={5} className={inputCls} />
+          <div className="flex items-center justify-between">
+            <label className={labelCls}>Body ({editLang.toUpperCase()}) — rich text, tampil di halaman detail</label>
+            <button
+              type="button"
+              onClick={() => {
+                const from = editLang === "en" ? "id" : "en";
+                setForm((p) => ({ ...p, body: { ...p.body, [editLang]: p.body[from] } }));
+              }}
+              className="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+            >
+              ⧉ Salin dari {editLang === "en" ? "ID" : "EN"}
+            </button>
+          </div>
+          <RichTextEditor
+            key={`${form.slug}-${editLang}`}
+            value={form.body[editLang]}
+            onChange={(html) => setField("body", html)}
+          />
         </div>
         <div className="flex items-center gap-4 pt-2">
           <button onClick={save} className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-blue-700">

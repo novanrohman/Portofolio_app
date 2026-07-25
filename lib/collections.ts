@@ -14,6 +14,8 @@ export const COLLECTION_KEYS = [
   "contact",
   "education",
   "profile",
+  "featured",
+  "projectmeta",
 ] as const;
 export type CollectionKey = (typeof COLLECTION_KEYS)[number];
 
@@ -31,6 +33,10 @@ const DEFAULTS: Record<CollectionKey, unknown[]> = {
   profile: [
     { name: "Novan Rohman", title: "Full-Stack Developer", email: "", phone: "", location: "Indonesia" },
   ],
+  // Pinned/highlighted project slugs (in display order).
+  featured: [],
+  // Extra per-project fields keyed by slug: { slug, role, team, tech: [] }.
+  projectmeta: [],
 };
 
 /**

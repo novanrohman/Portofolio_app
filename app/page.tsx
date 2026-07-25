@@ -1,17 +1,20 @@
+import Link from "next/link";
 import NavBar from "@/app/components/NavBar";
 import Footer from "@/app/components/Footer";
 import Reveal from "@/app/components/Reveal";
 import Counter from "@/app/components/Counter";
-import { getContent, getAllProjects } from "@/lib/db";
+import { getContent } from "@/lib/db";
 import { getLocale, getUi } from "@/lib/i18n";
 import { getCollection } from "@/lib/collections";
+import { getProjectViews } from "@/lib/projectView";
 
 export default async function Home(){
   const locale = await getLocale();
   const t = getUi(locale).home;
   const homeContent = await getContent("home", locale);
-  const projects = await getAllProjects(locale);
-  const featured = projects[0];
+  const projectViews = await getProjectViews(locale);
+  const featured = projectViews.find((p) => p.featured) ?? projectViews[0];
+  const highlighted = projectViews.filter((p) => p.featured);
   const skills = await getCollection<string>("skills");
   const experiences = await getCollection("experience");
   const contactLinks = await getCollection<{ label: string; href: string }>("contact");
@@ -52,7 +55,7 @@ export default async function Home(){
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="glass card-anim rounded-3xl p-5 text-left">
                 <p className="text-sm uppercase tracking-[0.24em] text-white/60">{t.projects}</p>
-                <Counter target={projects.length} suffix="+" className="mt-2 block text-2xl sm:text-3xl font-bold" />
+                <Counter target={projectViews.length} suffix="+" className="mt-2 block text-2xl sm:text-3xl font-bold" />
               </div>
               <div className="glass card-anim rounded-3xl p-5 text-left">
                 <p className="text-sm uppercase tracking-[0.24em] text-white/60">{t.experience}</p>
@@ -113,10 +116,72 @@ export default async function Home(){
           <Reveal className="glass rounded-3xl p-8 card-anim pulse-card">
             <p className="text-sm uppercase tracking-[0.24em] text-white/60">{t.featured}</p>
             <img src={featured?.image ?? "/images/placeholder.svg"} alt={featured?.title ?? "Featured project"} className="mt-4 w-full rounded-2xl border border-white/10" />
-            <h2 className="mt-3 text-2xl font-semibold">{featured?.title ?? "Your featured project"}</h2>
+            {featured ? (
+              <Link href={`/porto/${featured.slug}`} className="mt-3 block text-2xl font-semibold hover:text-emerald-300">{featured.title}</Link>
+            ) : (
+              <h2 className="mt-3 text-2xl font-semibold">Your featured project</h2>
+            )}
+            {featured?.role && (
+              <p className="mt-1 text-sm text-white/60">{[featured.role, featured.team].filter(Boolean).join(" · ")}</p>
+            )}
             <p className="mt-3 text-white/80">{featured?.summary ?? "A selected project from your portfolio."}</p>
+            {featured && featured.tech.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {featured.tech.map((tag) => (
+                  <span key={tag} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/70">{tag}</span>
+                ))}
+              </div>
+            )}
+            {featured && (
+              <div className="mt-5 flex flex-wrap items-center gap-4">
+                <Link href={`/porto/${featured.slug}`} className="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/15">
+                  {locale === "id" ? "Baca detail" : "Read details"} →
+                </Link>
+                {featured.url && (
+                  <a href={featured.url} target="_blank" rel="noopener noreferrer" className="text-sm text-white/70 hover:text-white">
+                    {locale === "id" ? "Kunjungi situs" : "Visit site"} ↗
+                  </a>
+                )}
+              </div>
+            )}
           </Reveal>
         </div>
+
+        {/* Highlighted Work — other pinned projects */}
+        {highlighted.length > 1 && (
+          <div className="mt-10">
+            <p className="text-sm uppercase tracking-[0.24em] text-white/60">{t.featured}</p>
+            <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {highlighted.slice(1).map((p) => (
+                <Reveal key={p.slug} className="glass-soft rounded-3xl p-5 card-anim">
+                  {p.image && (
+                    <img src={p.image} alt={p.title} className="mb-4 h-36 w-full rounded-2xl border border-white/10 object-cover" />
+                  )}
+                  <Link href={`/porto/${p.slug}`} className="text-lg font-semibold hover:text-emerald-300">{p.title}</Link>
+                  {p.role && <p className="mt-1 text-xs text-white/60">{[p.role, p.team].filter(Boolean).join(" · ")}</p>}
+                  <p className="mt-2 text-sm text-white/75">{p.summary}</p>
+                  {p.tech.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {p.tech.map((tag) => (
+                        <span key={tag} className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-white/70">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-4 flex flex-wrap items-center gap-4">
+                    <Link href={`/porto/${p.slug}`} className="text-sm font-semibold text-emerald-300 hover:text-emerald-200">
+                      {locale === "id" ? "Baca detail" : "Read details"} →
+                    </Link>
+                    {p.url && (
+                      <a href={p.url} target="_blank" rel="noopener noreferrer" className="text-sm text-white/70 hover:text-white">
+                        {locale === "id" ? "Kunjungi situs" : "Visit site"} ↗
+                      </a>
+                    )}
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        )}
       </main>
 
       <Footer />
