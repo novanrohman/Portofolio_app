@@ -20,13 +20,20 @@ export type ProjectView = {
 
 /** Projects merged with their extra metadata + pinned flag, pinned first. */
 export async function getProjectViews(locale: Locale): Promise<ProjectView[]> {
-  const [projects, metaList, featuredSlugs] = await Promise.all([
+  const [projects, metaList, featuredSlugs, order] = await Promise.all([
     getAllProjects(locale),
     getCollection<ProjectMeta>("projectmeta"),
     getCollection<string>("featured"),
+    getCollection<string>("projectorder"),
   ]);
 
   const metaBySlug = new Map(metaList.map((m) => [m.slug, m]));
+  // Slugs listed in projectorder come first (in that order); the rest keep
+  // their original order at the end.
+  const rank = (slug: string) => {
+    const i = order.indexOf(slug);
+    return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+  };
 
   return projects
     .map((p): ProjectView => {
@@ -39,5 +46,5 @@ export async function getProjectViews(locale: Locale): Promise<ProjectView[]> {
         featured: featuredSlugs.includes(p.slug),
       };
     })
-    .sort((a, b) => Number(b.featured) - Number(a.featured));
+    .sort((a, b) => rank(a.slug) - rank(b.slug));
 }

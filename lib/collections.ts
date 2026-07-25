@@ -16,6 +16,7 @@ export const COLLECTION_KEYS = [
   "profile",
   "featured",
   "projectmeta",
+  "projectorder",
 ] as const;
 export type CollectionKey = (typeof COLLECTION_KEYS)[number];
 
@@ -37,6 +38,8 @@ const DEFAULTS: Record<CollectionKey, unknown[]> = {
   featured: [],
   // Extra per-project fields keyed by slug: { slug, role, team, tech: [] }.
   projectmeta: [],
+  // Manual project display order (array of slugs).
+  projectorder: [],
 };
 
 /**

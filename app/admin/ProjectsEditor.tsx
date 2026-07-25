@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RichTextEditor from "@/app/admin/RichTextEditor";
 
 type Locale = "id" | "en";
@@ -40,6 +40,7 @@ export default function ProjectsEditor() {
   const [status, setStatus] = useState("");
   const [featured, setFeatured] = useState<string[]>([]);
   const [metaList, setMetaList] = useState<Meta[]>([]);
+  const [order, setOrder] = useState<string[]>([]);
 
   const load = () => {
     fetch("/api/projects?raw=1")
@@ -51,6 +52,36 @@ export default function ProjectsEditor() {
     fetch("/api/collections?key=projectmeta")
       .then((r) => r.json())
       .then((d) => setMetaList(Array.isArray(d.items) ? d.items : []));
+    fetch("/api/collections?key=projectorder")
+      .then((r) => r.json())
+      .then((d) => setOrder(Array.isArray(d.items) ? d.items : []));
+  };
+
+  // Drag reorder for the project list (persisted as `projectorder`).
+  const rank = (slug: string) => {
+    const i = order.indexOf(slug);
+    return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+  };
+  const ordered = [...projects].sort((a, b) => rank(a.slug) - rank(b.slug));
+  const dragIndex = useRef<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+  const saveOrder = async (slugs: string[]) => {
+    setOrder(slugs);
+    await fetch("/api/collections", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "projectorder", items: slugs }),
+    });
+  };
+  const onDropAt = (to: number) => {
+    const from = dragIndex.current;
+    dragIndex.current = null;
+    setOverIndex(null);
+    if (from === null || from === to) return;
+    const next = [...ordered];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    saveOrder(next.map((p) => p.slug));
   };
 
   const openProject = (p: Project) => {
@@ -124,16 +155,34 @@ export default function ProjectsEditor() {
           </button>
         </div>
         <div className="mt-4 space-y-2">
-          {projects.map((p) => (
+          {ordered.map((p, i) => (
             <div
               key={p.slug}
-              className={`flex items-center justify-between rounded-2xl px-3 py-2 text-sm ${
-                p.slug === form.slug ? "bg-blue-600 text-white" : "bg-white dark:bg-zinc-950"
-              }`}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setOverIndex(i);
+              }}
+              onDragLeave={() => setOverIndex((v) => (v === i ? null : v))}
+              onDrop={() => onDropAt(i)}
+              className={`flex items-center gap-1 rounded-2xl px-2 py-2 text-sm transition-colors ${
+                overIndex === i ? "ring-2 ring-blue-500" : ""
+              } ${p.slug === form.slug ? "bg-blue-600 text-white" : "bg-white dark:bg-zinc-950"}`}
             >
+              <span
+                draggable
+                onDragStart={() => (dragIndex.current = i)}
+                onDragEnd={() => {
+                  dragIndex.current = null;
+                  setOverIndex(null);
+                }}
+                className="cursor-grab select-none px-1 text-zinc-400 active:cursor-grabbing"
+                title="Drag to reorder"
+              >
+                ⠿
+              </span>
               <button
                 onClick={() => togglePin(p.slug)}
-                className={`mr-1 text-base leading-none ${featured.includes(p.slug) ? "text-amber-400" : "opacity-40 hover:opacity-80"}`}
+                className={`text-base leading-none ${featured.includes(p.slug) ? "text-amber-400" : "opacity-40 hover:opacity-80"}`}
                 title={featured.includes(p.slug) ? "Unpin from Highlighted" : "Pin to Highlighted"}
               >
                 {featured.includes(p.slug) ? "★" : "☆"}

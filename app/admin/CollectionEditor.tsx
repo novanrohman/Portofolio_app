@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type FieldDef = { name: string; label: string; textarea?: boolean; placeholder?: string };
 
@@ -47,6 +47,22 @@ export default function CollectionEditor({
       return next;
     });
 
+  // Drag-and-drop reordering
+  const dragIndex = useRef<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+  const onDrop = (to: number) => {
+    const from = dragIndex.current;
+    dragIndex.current = null;
+    setOverIndex(null);
+    if (from === null || from === to) return;
+    setItems((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return next;
+    });
+  };
+
   const setString = (i: number, value: string) =>
     setItems((prev) => prev.map((it, idx) => (idx === i ? value : it)));
   const setObjField = (i: number, name: string, value: string) =>
@@ -75,9 +91,31 @@ export default function CollectionEditor({
 
       <div className="space-y-3">
         {items.map((it, i) => (
-          <div key={i} className="rounded-2xl border border-zinc-200 p-3 dark:border-zinc-800">
+          <div
+            key={i}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setOverIndex(i);
+            }}
+            onDragLeave={() => setOverIndex((v) => (v === i ? null : v))}
+            onDrop={() => onDrop(i)}
+            className={`rounded-2xl border p-3 transition-colors ${
+              overIndex === i ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/30" : "border-zinc-200 dark:border-zinc-800"
+            }`}
+          >
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs text-zinc-400">#{i + 1}</span>
+              <span
+                draggable
+                onDragStart={() => (dragIndex.current = i)}
+                onDragEnd={() => {
+                  dragIndex.current = null;
+                  setOverIndex(null);
+                }}
+                className="cursor-grab select-none text-xs text-zinc-400 active:cursor-grabbing"
+                title="Drag to reorder"
+              >
+                ⠿ #{i + 1}
+              </span>
               <div className="flex items-center gap-1">
                 <button onClick={() => move(i, -1)} className="rounded-lg px-2 py-1 text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800" title="Up">
                   ↑
