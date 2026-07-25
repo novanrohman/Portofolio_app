@@ -2,11 +2,12 @@ import NavBar from "@/app/components/NavBar";
 import Reveal from "@/app/components/Reveal";
 import { getContent } from "@/lib/db";
 import { getLocale } from "@/lib/i18n";
-import { skills } from "@/lib/portfolioData";
+import { getCollection } from "@/lib/collections";
 
 export default async function Skills() {
   const locale = await getLocale();
   const skillsContent = await getContent("skills", locale);
+  const skills = await getCollection<string>("skills");
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black text-white">
       <NavBar />

@@ -1,0 +1,153 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+type Locale = "id" | "en";
+type Bilingual = { id: string; en: string };
+type Project = {
+  slug: string;
+  title: Bilingual;
+  summary: Bilingual;
+  body: Bilingual;
+  image: string;
+  url: string;
+};
+
+const inputCls =
+  "mt-2 w-full rounded-2xl border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 dark:border-zinc-700 dark:bg-zinc-900";
+const labelCls = "block text-sm font-medium text-zinc-700 dark:text-zinc-300";
+
+const blank = (): Project => ({
+  slug: "",
+  title: { id: "", en: "" },
+  summary: { id: "", en: "" },
+  body: { id: "", en: "" },
+  image: "",
+  url: "",
+});
+
+export default function ProjectsEditor() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [form, setForm] = useState<Project>(blank());
+  const [editLang, setEditLang] = useState<Locale>("id");
+  const [status, setStatus] = useState("");
+
+  const load = () =>
+    fetch("/api/projects?raw=1")
+      .then((r) => r.json())
+      .then(setProjects);
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const setField = (field: "title" | "summary" | "body", value: string) =>
+    setForm((p) => ({ ...p, [field]: { ...p[field], [editLang]: value } }));
+
+  const save = async () => {
+    if (!form.slug.trim()) {
+      setStatus("Slug is required.");
+      return;
+    }
+    setStatus("Saving...");
+    const res = await fetch("/api/projects", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+    setStatus(res.ok ? "Saved." : "Save failed.");
+    if (res.ok) await load();
+  };
+
+  const remove = async (slug: string) => {
+    if (!confirm(`Delete project "${slug}"?`)) return;
+    const res = await fetch(`/api/projects?slug=${encodeURIComponent(slug)}`, { method: "DELETE" });
+    if (res.ok) {
+      await load();
+      if (form.slug === slug) setForm(blank());
+    }
+  };
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+      <aside className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Projects</p>
+          <button onClick={() => setForm(blank())} className="rounded-lg bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white">
+            + New
+          </button>
+        </div>
+        <div className="mt-4 space-y-2">
+          {projects.map((p) => (
+            <div
+              key={p.slug}
+              className={`flex items-center justify-between rounded-2xl px-3 py-2 text-sm ${
+                p.slug === form.slug ? "bg-blue-600 text-white" : "bg-white dark:bg-zinc-950"
+              }`}
+            >
+              <button onClick={() => setForm(p)} className="min-w-0 flex-1 truncate text-left">
+                {p.title.id || p.slug}
+              </button>
+              <button onClick={() => remove(p.slug)} className="ml-2 text-xs opacity-70 hover:opacity-100" title="Delete">
+                ✕
+              </button>
+            </div>
+          ))}
+          {projects.length === 0 && <p className="text-xs text-zinc-500">No projects yet.</p>}
+        </div>
+      </aside>
+
+      <section className="space-y-4 rounded-3xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Language:</span>
+          <div className="inline-flex rounded-xl border border-zinc-300 p-0.5 dark:border-zinc-700">
+            {(["id", "en"] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => setEditLang(l)}
+                className={`rounded-lg px-3 py-1 text-xs font-semibold uppercase transition ${
+                  editLang === l ? "bg-blue-600 text-white" : "text-zinc-600 dark:text-zinc-400"
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className={labelCls}>Slug (unique id)</label>
+            <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} className={inputCls} placeholder="my-project" />
+          </div>
+          <div>
+            <label className={labelCls}>Image URL</label>
+            <input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className={inputCls} placeholder="/images/x.svg" />
+          </div>
+        </div>
+        <div>
+          <label className={labelCls}>Link URL</label>
+          <input value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} className={inputCls} placeholder="https://..." />
+        </div>
+        <div>
+          <label className={labelCls}>Title ({editLang.toUpperCase()})</label>
+          <input value={form.title[editLang]} onChange={(e) => setField("title", e.target.value)} className={inputCls} />
+        </div>
+        <div>
+          <label className={labelCls}>Summary ({editLang.toUpperCase()})</label>
+          <textarea value={form.summary[editLang]} onChange={(e) => setField("summary", e.target.value)} rows={2} className={inputCls} />
+        </div>
+        <div>
+          <label className={labelCls}>Body ({editLang.toUpperCase()})</label>
+          <textarea value={form.body[editLang]} onChange={(e) => setField("body", e.target.value)} rows={5} className={inputCls} />
+        </div>
+        <div className="flex items-center gap-4 pt-2">
+          <button onClick={save} className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-blue-700">
+            {projects.some((p) => p.slug === form.slug) ? "Update project" : "Add project"}
+          </button>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{status}</p>
+        </div>
+      </section>
+    </div>
+  );
+}

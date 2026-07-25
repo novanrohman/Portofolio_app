@@ -30,11 +30,11 @@ export async function getLocale(): Promise<Locale> {
 export const ui = {
   id: {
     nav: { home: "Beranda", about: "Tentang", skills: "Keahlian", portfolio: "Portofolio", contact: "Kontak" },
-    home: { projects: "Proyek", experience: "Pengalaman", design: "Desain", techStack: "Tech Stack", currently: "Saat ini", featured: "Karya Unggulan", getInTouch: "Hubungi saya" },
+    home: { projects: "Proyek", experience: "Pengalaman", design: "Desain", techStack: "Tech Stack", currently: "Saat ini", featured: "Karya Unggulan", getInTouch: "Hubungi saya", downloadCv: "Unduh CV" },
   },
   en: {
     nav: { home: "Home", about: "About", skills: "Skills", portfolio: "Portfolio", contact: "Contact" },
-    home: { projects: "Projects", experience: "Experience", design: "Design", techStack: "Tech stack", currently: "Currently", featured: "Featured work", getInTouch: "Get in touch" },
+    home: { projects: "Projects", experience: "Experience", design: "Design", techStack: "Tech stack", currently: "Currently", featured: "Featured work", getInTouch: "Get in touch", downloadCv: "Download CV" },
   },
 } as const;
 

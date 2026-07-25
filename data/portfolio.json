@@ -7,21 +7,30 @@
         "en": "Novan Porto"
       },
       "summary": {
-        "id": "Manajemen Risiko di Nusapala Berkah Autonomous | Mantan Full-Stack Developer di Omni Hub",
-        "en": "Risk Management at Nusapala Berkah Autonomous | Former Full-Stack Developer at Omni Hub"
+        "id": "Manajemen Risiko di Nusapala Berkah Autonomous",
+        "en": "Risk Management at Nusapala Berkah Autonomous"
       },
       "body": {
         "id": "Saat ini, saya bertanggung jawab dalam mengelola risiko IT dan keamanan sistem di Nusapala Berkah Autonomous. Sebelumnya, sebagai Full-Stack Developer di Omni Hub, saya berpengalaman membangun aplikasi web berbasis Laravel. Kombinasi pengalaman ini memberi saya perspektif unik: saya tidak hanya memahami cara membangun perangkat lunak, tetapi juga tahu persis bagaimana cara mengidentifikasi celah keamanan, menganalisis risiko, dan memastikan sistem berjalan dengan aman serta patuh pada standar industri.",
         "en": "I currently manage IT risk and system security at Nusapala Berkah Autonomous. Previously, as a Full-Stack Developer at Omni Hub, I built Laravel-based web applications. This combination gives me a unique perspective: I don't just know how to build software, I also know exactly how to identify security gaps, analyze risk, and ensure systems run securely and stay compliant with industry standards."
       },
-      "updatedAt": "2026-07-12T12:35:22.651Z"
+      "updatedAt": "2026-07-25T13:48:08.839Z"
     },
     {
       "slug": "about",
-      "title": "About this portfolio",
-      "summary": "Use this section to introduce yourself, your mission, and your professional story.",
-      "body": "I build fast, maintainable web experiences with modern Next.js architecture. This portfolio stores content in JSON so updates are simple and self-hosted.",
-      "updatedAt": "2026-06-16T14:41:49.635Z"
+      "title": {
+        "id": "Portofolio",
+        "en": "About this portfolio"
+      },
+      "summary": {
+        "id": "Hasil karya yang pernah dibuat",
+        "en": "Use this section to introduce yourself, your mission, and your professional story."
+      },
+      "body": {
+        "id": "Portofolio terkait project yang pernah di buat",
+        "en": "I build fast, maintainable web experiences with modern Next.js architecture. This portfolio stores content in JSON so updates are simple and self-hosted."
+      },
+      "updatedAt": "2026-07-25T13:44:59.044Z"
     },
     {
       "slug": "skills",
@@ -50,6 +59,20 @@
       "summary": "ERP App for B2B and B2C businesses, built with Next.js and Tailwind CSS.",
       "body": "Proyek ini adalah aplikasi ERP menyeluruh yang dirancang untuk menyederhanakan operasi bisnis B2B maupun B2C. Dibangun dengan Next.js dan Tailwind CSS, aplikasi ini menyediakan antarmuka yang responsif dan mudah digunakan, sehingga bisnis dapat mengelola sumber dayanya secara efisien. Modulnya mencakup manajemen inventori, pemrosesan pesanan, manajemen hubungan pelanggan, dan pelaporan keuangan. Dengan arsitektur yang tangguh dan desain modern, MyPiras ERP membantu bisnis mengoptimalkan alur kerja dan meningkatkan produktivitas.",
       "updatedAt": "2026-07-12T14:04:08.432Z"
+    },
+    {
+      "slug": "_skills",
+      "title": "skills",
+      "summary": "collection",
+      "body": [
+        "Analisia",
+        "Bootstrap",
+        "PHP",
+        "Laravel",
+        "Livewire",
+        "Figma"
+      ],
+      "updatedAt": "2026-07-25T13:41:22.678Z"
     }
   ],
   "projects": [

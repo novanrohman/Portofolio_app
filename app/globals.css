@@ -31,6 +31,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Print / ATS CV: hide site chrome, force clean white page. */
+@media print {
+  nav,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
 /* Prevent decorative elements (hero blobs, etc.) from causing horizontal
    scroll on mobile. `clip` (not hidden) avoids creating a scroll container,
    so the sticky navbar keeps working. */
@@ -102,6 +114,19 @@ body {
 
 .nav-shell.scrolled a:hover {
   color: rgb(1, 1, 5);
+}
+
+/* Language toggle: turn dark when the navbar is solid white on scroll,
+   otherwise it's white-on-white and disappears. */
+.nav-shell.scrolled [role="group"] {
+  border-color: rgba(2, 6, 23, 0.15);
+}
+.nav-shell.scrolled [role="group"] button {
+  color: rgba(2, 6, 23, 0.55);
+}
+.nav-shell.scrolled [role="group"] button[aria-pressed="true"] {
+  background: rgba(2, 6, 23, 0.1);
+  color: rgba(2, 6, 23, 0.9);
 }
 
 

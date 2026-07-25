@@ -225,3 +225,15 @@ export async function upsertProject(input: { slug: string; title: Localized; sum
   writeDatabase(db);
   return updated;
 }
+
+export async function deleteProject(slug: string) {
+  if (sql) {
+    await ensureSchema();
+    await sql`DELETE FROM projects WHERE slug = ${slug}`;
+    return { slug };
+  }
+  const db = readDatabase();
+  db.projects = db.projects.filter((p) => p.slug !== slug);
+  writeDatabase(db);
+  return { slug };
+}
